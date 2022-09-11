@@ -22,11 +22,15 @@ class S3Client:
         )
 
     def download(self, key, bucket='pet-files'):
-        response = self.s3.get_object(
-            Bucket=bucket,
-            Key=key,
-        )
-        return response['Body'].read()
+        try:
+            response = self.s3.get_object(
+                Bucket=bucket,
+                Key=key,
+            )
+        
+            return response['Body'].read()
+        except:
+            return None
 
     def remove(self, key, bucket='pet-files'):
         self.s3.delete_object(

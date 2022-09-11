@@ -30,13 +30,17 @@ def retrieve_file(_id: str):
     """ Retrieve a file from storage """
     
     binary_pdf = s3_client.download(_id + '.pdf')
-    
-    response = make_response(binary_pdf)
-    response.headers['Content-Type'] = 'application/pdf'
-    response.headers['Content-Disposition'] = \
-        'inline; filename=%s.pdf' % 'yourfilename'
 
-    return response
+    if binary_pdf:
+        response = make_response(binary_pdf)
+        print(_id)
+        print(response)
+        response.headers['Content-Type'] = 'application/pdf'
+        response.headers['Content-Disposition'] = \
+            'inline; filename=%s.pdf' % 'yourfilename'
+
+        return response, 200
+    return jsonify({'message': 'not found'}), 404
 
 @app.route('/file/<_id>', methods=['DELETE'])
 def delete_file(_id: str):
